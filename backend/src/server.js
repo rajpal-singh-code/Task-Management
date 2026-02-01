@@ -9,11 +9,15 @@ const notesRouter = require("./routes/noteRoutes");
 
 const app = express();
 
-
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://task-management-hdcs.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -25,12 +29,13 @@ app.get("/", (req, res) => {
 app.use("/", authRouter);
 app.use("/api/notes", notesRouter);
 
-
 const startServer = async () => {
   try {
     await connectDB();
     const PORT = process.env.PORT || 4000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () =>
+      console.log(`Server running on port ${PORT}`)
+    );
   } catch (err) {
     console.error("Failed to start server:", err.message);
   }
